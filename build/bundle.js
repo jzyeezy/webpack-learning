@@ -19647,7 +19647,7 @@
 	    ReactDOM.render(React.createElement(
 	        'h1',
 	        null,
-	        'Hello, World!'
+	        'Hello, World! Jesse eats his own poop'
 	    ), document.getElementById('example'));
 	};
 

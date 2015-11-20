@@ -16,6 +16,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.5.1",
     "grunt-open": "^0.2.3",
+    "grunt-sass": "^1.1.0",
     "grunt-webpack": "^1.0.11",
     "load-grunt-tasks": "^3.3.0",
     "node-sass": "^3.4.2",

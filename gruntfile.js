@@ -10,9 +10,13 @@ module.exports = function (grunt) {
             dev: webpackConfig
         },
         watch: {
-            app: {
-                files: ["app/**/*"],
+            client: {
+                files: ["app/scripts/**/*", "public/index.html"],
                 tasks: ["webpack:dev"]
+            },
+            styles: {
+                files: ["app/styles/*"],
+                tasks: ["sass:dev"]
             },
             options: {
                 livereload: true
@@ -29,11 +33,22 @@ module.exports = function (grunt) {
             dev: {
                 path: 'http://localhost:1234/'
             }
+        },
+        sass: {
+            options: {
+                sourceMap: true
+            },
+            dev: {
+                files: {
+                    'build/styles/app.css' : 'app/styles/app.scss'
+                }
+            }
         }
     });
 
     grunt.registerTask("default", [
         "webpack:dev",
+        "sass:dev",
         "express:dev",
         "open:dev",
         "watch"
