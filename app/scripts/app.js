@@ -1,3 +1,15 @@
-var React = window.React = require('react');
-var ReactDOM = window.ReactDOM = require('react-dom');
-require('./helloworld.jsx')(ReactDOM);
+import React from 'react'
+import ReactDom from 'react-dom'
+import { connect, Provider } from 'react-redux'
+import configureStore from './store/configureStore'
+import TodoContainer from './containers/todoContainer'
+
+let store = configureStore();
+
+ReactDom.render
+    (<Provider store={store}>
+        <TodoContainer></TodoContainer>
+    </Provider>,
+    document.getElementById('content'));
+
+
