@@ -46,6 +46,8 @@
 
 	'use strict';
 	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -64,14 +66,48 @@
 	
 	var _todoContainer2 = _interopRequireDefault(_todoContainer);
 	
+	var _footerContainer = __webpack_require__(187);
+	
+	var _footerContainer2 = _interopRequireDefault(_footerContainer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
 	var store = (0, _configureStore2.default)();
+	
+	var MyApp = (function (_React$Component) {
+	    _inherits(MyApp, _React$Component);
+	
+	    function MyApp() {
+	        _classCallCheck(this, MyApp);
+	
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MyApp).apply(this, arguments));
+	    }
+	
+	    _createClass(MyApp, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(_todoContainer2.default, null),
+	                _react2.default.createElement(_footerContainer2.default, null)
+	            );
+	        }
+	    }]);
+	
+	    return MyApp;
+	})(_react2.default.Component);
 	
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRedux.Provider,
 	    { store: store },
-	    _react2.default.createElement(_todoContainer2.default, null)
+	    _react2.default.createElement(MyApp, null)
 	), document.getElementById('content'));
 
 /***/ },
@@ -20883,12 +20919,12 @@
 	var _filterActions = __webpack_require__(180);
 	
 	function filterReducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? 'SHOW_ALL' : arguments[0];
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? { filter: 'SHOW_ALL' } : arguments[0];
 	    var action = arguments[1];
 	
 	    switch (action.type) {
 	        case _filterActions.SET_FILTER:
-	            return action.filter;
+	            return Object.assign({}, state, { filter: action.filter });
 	        default:
 	            return state;
 	    }
@@ -20936,19 +20972,33 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	function todos() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? { todos: [] } : arguments[0];
 	    var action = arguments[1];
 	
 	    switch (action.type) {
 	        case _todoActions.ADD_TODO:
-	            return [].concat(_toConsumableArray(state), [{
-	                text: action.text,
-	                completed: false
-	            }]);
+	            var todos = [].concat(_toConsumableArray(state.todos), [{ text: action.text, completed: false }]); //state.todos.splice();
+	            return Object.assign({}, state, { todos: todos });
+	        //return [
+	        //    ...state,
+	        //    {
+	        //        text: action.text,
+	        //        completed: false
+	        //    }
+	        //];
 	        case _todoActions.COMPLETE_TODO:
-	            return [].concat(_toConsumableArray(state.slice(0, action.index)), [Object.assign({}, state[action.index], {
-	                completed: true
-	            })], _toConsumableArray(state.slice(action.index + 1)));
+	            var todos = [].concat(_toConsumableArray(state.todos.slice(0, action.index)), [Object.assign({}, state.todos[action.index], {
+	                completed: !state.todos[action.index].completed
+	            })], _toConsumableArray(state.todos.slice(action.index + 1)));
+	            //todos[action.index].completed = !todos[action.index].completed;
+	            return Object.assign({}, state, { todos: todos });
+	        //return [
+	        //    ...state.slice(0, action.index),
+	        //    Object.assign({}, state[action.index], {
+	        //        completed: !state[action.index].completed
+	        //    }),
+	        //    ...state.slice(action.index + 1)
+	        //];
 	        default:
 	            return state;
 	    }
@@ -21013,10 +21063,6 @@
 	
 	var _TodoList2 = _interopRequireDefault(_TodoList);
 	
-	var _Footer = __webpack_require__(187);
-	
-	var _Footer2 = _interopRequireDefault(_Footer);
-	
 	var _todoActions = __webpack_require__(182);
 	
 	var _todoActions2 = _interopRequireDefault(_todoActions);
@@ -21047,9 +21093,8 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'todoContainer' },
-	                _react2.default.createElement(_AddTodo2.default, { addTodo: this.props.addTodo }),
-	                _react2.default.createElement(_TodoList2.default, { todos: this.props.todos }),
-	                _react2.default.createElement(_Footer2.default, null)
+	                _react2.default.createElement(_AddTodo2.default, { addToDo: this.props.addTodo }),
+	                _react2.default.createElement(_TodoList2.default, { todos: this.props.todos, onTodoClick: this.props.completeTodo })
 	            );
 	        }
 	    }]);
@@ -21058,7 +21103,7 @@
 	})(_react2.default.Component);
 	
 	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return state;
+	    return state.todos;
 	}, _todoActions2.default)(TodoContainer);
 
 /***/ },
@@ -21108,19 +21153,11 @@
 	                _react2.default.createElement(
 	                    "button",
 	                    { onClick: function onClick() {
-	                            _this2.props.addTodo(_this2.refs.input.value);
+	                            _this2.props.addToDo(_this2.refs.input.value);_this2.refs.input.value = "";
 	                        } },
 	                    "Add"
 	                )
 	            );
-	        }
-	    }, {
-	        key: "handleClick",
-	        value: function handleClick(e) {
-	            var node = this.refs.input;
-	            var text = node.value.trim();
-	            this.props.onAddClick(text);
-	            node.value = '';
 	        }
 	    }]);
 	
@@ -21179,7 +21216,7 @@
 	                'ul',
 	                null,
 	                this.props.todos.map(function (todo, index) {
-	                    return _react2.default.createElement(_Todo2.default, _extends({}, todo, { key: index, onClick: function onClick() {
+	                    return _react2.default.createElement(_Todo2.default, _extends({}, todo, { key: index, onTodoClick: function onTodoClick() {
 	                            return _this2.props.onTodoClick(index);
 	                        } }));
 	                })
@@ -21233,7 +21270,7 @@
 	            return _react2.default.createElement(
 	                'li',
 	                {
-	                    //onClick={this.props.onClick}
+	                    onClick: this.props.onTodoClick,
 	                    style: {
 	                        textDecoration: this.props.completed ? 'line-through' : 'none',
 	                        cursor: this.props.completed ? 'cursor' : 'pointer'
@@ -21264,6 +21301,12 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRedux = __webpack_require__(159);
+	
+	var _filterActions = __webpack_require__(180);
+	
+	var _filterActions2 = _interopRequireDefault(_filterActions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21286,6 +21329,9 @@
 	    _createClass(Footer, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+	
+	            console.log(this.props);
 	            return _react2.default.createElement(
 	                'p',
 	                null,
@@ -21293,19 +21339,25 @@
 	                ' ',
 	                _react2.default.createElement(
 	                    'a',
-	                    { href: '#' },
+	                    { href: '#', onClick: function onClick() {
+	                            return _this2.props.setFilter('SHOW_ALL');
+	                        } },
 	                    'All'
 	                ),
 	                ' ',
 	                _react2.default.createElement(
 	                    'a',
-	                    { href: '#' },
+	                    { href: '#', onClick: function onClick() {
+	                            return _this2.props.setFilter('SHOW_ACTIVE');
+	                        } },
 	                    'Active'
 	                ),
 	                ' ',
 	                _react2.default.createElement(
 	                    'a',
-	                    { href: '#' },
+	                    { href: '#', onClick: function onClick() {
+	                            return _this2.props.setFilter('SHOW_COMPLETED');
+	                        } },
 	                    'Completed'
 	                )
 	            );
@@ -21315,7 +21367,9 @@
 	    return Footer;
 	})(_react2.default.Component);
 	
-	exports.default = Footer;
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return state.visibilityFilter;
+	}, _filterActions2.default)(Footer);
 
 /***/ }
 /******/ ]);

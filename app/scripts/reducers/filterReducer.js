@@ -3,10 +3,10 @@
  */
 import {SET_FILTER} from '../actions/filterActions'
 
-export default function filterReducer (state = 'SHOW_ALL', action){
+export default function filterReducer (state = {filter: 'SHOW_ALL'}, action){
     switch (action.type){
         case SET_FILTER:
-            return action.filter;
+            return Object.assign({}, state, {filter: action.filter});
         default:
             return state;
     }

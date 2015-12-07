@@ -9,7 +9,7 @@ export default class TodoList extends React.Component{
         return (
             <ul>
                 {this.props.todos.map((todo, index) =>
-                    <Todo {...todo} key={index} onClick={() => this.props.onTodoClick(index)}/>
+                    <Todo {...todo} key={index} onTodoClick={() => this.props.onTodoClick(index)}/>
                 )}
             </ul>
         )

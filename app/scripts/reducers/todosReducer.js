@@ -1,23 +1,34 @@
 import {ADD_TODO, COMPLETE_TODO} from '../actions/todoActions'
 
-export default function todos(state = [], action){
+export default function todos(state = {todos: []}, action){
     switch(action.type){
         case ADD_TODO:
-            return [
-                ...state,
-                {
-                    text: action.text,
-                    completed: false
-                }
-            ];
+            var todos = [...state.todos, {text: action.text, completed: false}];//state.todos.splice();
+            return Object.assign({}, state, {todos});
+            //return [
+            //    ...state,
+            //    {
+            //        text: action.text,
+            //        completed: false
+            //    }
+            //];
         case COMPLETE_TODO:
-            return [
-                ...state.slice(0, action.index),
-                Object.assign({}, state[action.index], {
-                    completed: true
-                }),
-                ...state.slice(action.index + 1)
-            ];
+            var todos = [
+                    ...state.todos.slice(0, action.index),
+                    Object.assign({}, state.todos[action.index], {
+                        completed: !state.todos[action.index].completed
+                    }),
+                    ...state.todos.slice(action.index + 1)
+                ];
+            //todos[action.index].completed = !todos[action.index].completed;
+            return Object.assign({}, state, {todos});
+            //return [
+            //    ...state.slice(0, action.index),
+            //    Object.assign({}, state[action.index], {
+            //        completed: !state[action.index].completed
+            //    }),
+            //    ...state.slice(action.index + 1)
+            //];
         default:
             return state
     }

@@ -20,7 +20,7 @@ var _TodoList = require('../components/TodoList');
 
 var _TodoList2 = _interopRequireDefault(_TodoList);
 
-var _Footer = require('../components/Footer');
+var _Footer = require('Footer');
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
